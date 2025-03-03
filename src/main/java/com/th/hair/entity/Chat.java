@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"sender", "receiver"}))
 public class Chat extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,11 +14,11 @@ public class Chat extends BaseEntity{
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "to_user")
-    private User to;
+    @JoinColumn(name = "sender")
+    private User sender;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "from_user")
-    private User from;
+    @JoinColumn(name = "receiver")
+    private User receiver;
 }
