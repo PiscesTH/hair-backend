@@ -32,17 +32,23 @@ public class ChatService {
                     ChatListVo.builder()
                             .ichat(item.getIchat())
                             .receiverName(item.getSender().getNm())
-                            .senderPk(item.getReceiver().getIuser())
+                            .receiverPk(item.getSender().getIuser())
                             .build()
             )).toList();
             return result;
         }
         Chat chatList = chatRepository.findBySender(user);
+        if (chatList == null) {
+            chatList = new Chat();
+            chatList.setSender(user);
+            chatList.setReceiver(userRepository.findById(1L).get());
+            chatRepository.save(chatList);
+        }
         List<ChatListVo> result = new ArrayList<>();
         result.add(ChatListVo.builder()
                 .ichat(chatList.getIchat())
                 .receiverName(chatList.getReceiver().getNm())
-                .senderPk(chatList.getSender().getIuser())
+                .receiverPk(chatList.getReceiver().getIuser())
                 .build());
         return result;
     }

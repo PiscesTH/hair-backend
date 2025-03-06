@@ -8,5 +8,5 @@ import lombok.Getter;
 public class ChatListVo {
     private Long ichat;
     private String receiverName;
-    private Long senderPk;
+    private Long receiverPk;
 }
