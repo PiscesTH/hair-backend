@@ -11,5 +11,5 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @EntityGraph(attributePaths = "sender")
     List<Chat> findAllByReceiver(User user);
     Chat findBySender(User user);
-
+    Chat findByIchatAndSender(Long ichat, User sender);
 }
