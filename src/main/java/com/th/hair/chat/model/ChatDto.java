@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ChatDto {
     private Long ichat;
-    private Long toUser;
+    private Long receiverPk;
     private String message;
 }

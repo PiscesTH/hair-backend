@@ -3,6 +3,7 @@ package com.th.hair.chat;
 import com.th.hair.chat.model.ChatDto;
 import com.th.hair.chat.model.ChatListVo;
 import com.th.hair.chat.model.MessageDto;
+import com.th.hair.chat.model.MessageVo;
 import com.th.hair.entity.Chat;
 import com.th.hair.entity.Message;
 import com.th.hair.entity.User;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +58,13 @@ public class ChatService {
                 .receiverName(chatList.getReceiver().getNm())
                 .receiverPk(chatList.getReceiver().getIuser())
                 .build());
+        return result;
+    }
+
+    public List<MessageVo> getMessages(Long ichat) {
+        Chat chat = chatRepository.findById(ichat).get();
+        List<Message> messageList = messageRepository.findAllByChat(chat);
+        List<MessageVo> result = messageList.stream().map(item -> new MessageVo(item.getImessage(), item.getUser().getIuser(), item.getMessage())).toList();
         return result;
     }
 
