@@ -68,7 +68,7 @@ public class ChatService {
         return result;
     }
 
-    public String postMessage(ChatDto dto) {
+    public void postMessage(ChatDto dto) {
         long iuser = authenticationFacade.getLoginUserPk();
         User user = userRepository.getReferenceById(iuser);
         Chat chat = chatRepository.findByIchatAndSender(dto.getIchat(), user);
@@ -80,6 +80,5 @@ public class ChatService {
         message.setMessage(dto.getMessage());
         message.setUser(user);
         messageRepository.save(message);
-        return null;
     }
 }
