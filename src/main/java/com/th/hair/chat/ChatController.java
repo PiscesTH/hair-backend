@@ -7,8 +7,6 @@ import com.th.hair.chat.model.MessageVo;
 import com.th.hair.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/chat")
 public class ChatController {
-    private final SimpMessagingTemplate messagingTemplate;
     private final ChatService service;
 
     //메세지 보내기
     @PostMapping("/message")
     public ApiResponse<?> sendMessage(@RequestBody ChatDto dto) {
-//        messagingTemplate.convertAndSend("/topic/public", dto);
         service.postMessage(dto);
         return new ApiResponse<>(null);
     }
