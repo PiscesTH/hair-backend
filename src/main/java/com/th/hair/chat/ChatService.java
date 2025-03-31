@@ -70,9 +70,10 @@ public class ChatService {
 
     public void postMessage(ChatDto dto) {
         long iuser = authenticationFacade.getLoginUserPk();
+        log.info("iuser : {}", iuser);
         User user = userRepository.getReferenceById(iuser);
-        Chat chat = chatRepository.findByIchatAndSender(dto.getIchat(), user);
-        if (chat == null) {
+        Optional<Chat> chatOpt = chatRepository.findById(dto.getIchat());
+        if (chatOpt.isEmpty()) {
             throw new RestApiException(CommonErrorCode.BAD_REQUEST);
         }
         Message message = new Message();

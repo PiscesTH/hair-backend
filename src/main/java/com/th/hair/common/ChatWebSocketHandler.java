@@ -2,6 +2,7 @@ package com.th.hair.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.th.hair.chat.model.ChatDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@Slf4j
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
@@ -30,6 +32,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 사용자가 웹소켓 연결을 맺으면 호출됨
         String chatRoomId = getChatRoomId(session);
+        log.info("웹소켓 연결 시도");
         chatRooms.computeIfAbsent(chatRoomId, k -> new CopyOnWriteArrayList<>()).add(session);
     }
 
@@ -37,7 +40,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         // 메시지를 받았을 때 호출됨
         ChatDto chatMessage = objectMapper.readValue(message.getPayload(), ChatDto.class);
-        Long ichat = chatMessage.getIchat();
+        String ichat = chatMessage.getIchat().toString();
+        log.info("web socket - ichat : {}", ichat);
 
         List<WebSocketSession> sessions = chatRooms.getOrDefault(ichat, Collections.emptyList());
         for (WebSocketSession s : sessions) {
@@ -55,6 +59,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
     private String getChatRoomId(WebSocketSession session) {
+        log.info("세션 uri : {}", session.getUri());
         return session.getUri().getQuery().split("=")[1]; // 예: ws://localhost:8080/ws/chat?chatRoomId=1
     }
 }
