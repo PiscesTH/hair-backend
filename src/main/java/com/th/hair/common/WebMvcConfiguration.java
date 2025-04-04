@@ -25,17 +25,15 @@ public class WebMvcConfiguration implements WebMvcConfigurer { //새로고침
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/**")
+                .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
                     @Override
                     protected Resource getResource(String resourcePath, Resource location) throws IOException {
                         Resource requestedResource = location.createRelative(resourcePath);
-
                         if (requestedResource.exists() && requestedResource.isReadable()) {
                             return requestedResource;
                         }
-
                         return new ClassPathResource("/static/index.html");
                     }
                 });

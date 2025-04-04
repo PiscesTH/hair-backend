@@ -2,7 +2,6 @@ package com.th.hair.chat;
 
 import com.th.hair.chat.model.ChatDto;
 import com.th.hair.chat.model.ChatListVo;
-import com.th.hair.chat.model.MessageDto;
 import com.th.hair.chat.model.MessageVo;
 import com.th.hair.entity.Chat;
 import com.th.hair.entity.Message;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,14 +31,14 @@ public class ChatService {
 
     public List<ChatListVo> getChatList() {
         long iuser = authenticationFacade.getLoginUserPk();
-        User user = userRepository.getReferenceById(iuser);
+        User user = userRepository.findById(iuser).get();
         if (iuser == 1) {
             List<Chat> chatList = chatRepository.findAllByReceiver(user);
             List<ChatListVo> result = chatList.stream().map(item -> (
                     ChatListVo.builder()
                             .ichat(item.getIchat())
-                            .receiverName(item.getSender().getNm())
-                            .receiverPk(item.getSender().getIuser())
+                            .receiver(item.getSender().getNm())
+                            .sender(user.getNm())
                             .build()
             )).toList();
             return result;
@@ -55,8 +53,8 @@ public class ChatService {
         List<ChatListVo> result = new ArrayList<>();
         result.add(ChatListVo.builder()
                 .ichat(chatList.getIchat())
-                .receiverName(chatList.getReceiver().getNm())
-                .receiverPk(chatList.getReceiver().getIuser())
+                .receiver(chatList.getReceiver().getNm())
+                .sender(chatList.getSender().getNm())
                 .build());
         return result;
     }
@@ -64,7 +62,7 @@ public class ChatService {
     public List<MessageVo> getMessages(Long ichat) {
         Chat chat = chatRepository.findById(ichat).get();
         List<Message> messageList = messageRepository.findAllByChat(chat);
-        List<MessageVo> result = messageList.stream().map(item -> new MessageVo(item.getImessage(), item.getUser().getIuser(), item.getMessage())).toList();
+        List<MessageVo> result = messageList.stream().map(item -> new MessageVo(item.getImessage(), item.getUser().getNm(), item.getMessage())).toList();
         return result;
     }
 

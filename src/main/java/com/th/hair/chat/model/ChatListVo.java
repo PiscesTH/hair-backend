@@ -7,6 +7,6 @@ import lombok.Getter;
 @Builder
 public class ChatListVo {
     private Long ichat;
-    private String receiverName;
-    private Long receiverPk;
+    private String receiver;
+    private String sender;
 }

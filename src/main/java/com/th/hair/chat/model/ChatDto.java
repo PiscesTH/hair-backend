@@ -6,5 +6,5 @@ import lombok.Data;
 public class ChatDto {
     private Long ichat;
     private String message;
-    private Long receiverPk;
+    private String sender;
 }
